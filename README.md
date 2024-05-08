@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define RED "\x1b[31m"
+#define RESET "\x1b[0m"
+
+
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
 int main() {
@@ -39,7 +43,13 @@ int main() {
     // Menu
     while (tela == 0) {
         system("cls");
-        printf("\n\n   Br Dungeon\n\n\n\n   1-jogar\n\n\n   2-tutorial\n\n\n   3-sair\n\n\n");
+        printf("%s        ****  *****      **     *     *  *    *  *******   *******  *******  *    *%s \n", RED, RESET);
+	    printf("%s        *   * *   *      * *    *     *  * *  *  *         *        *     *  * *  *%s \n", RED, RESET);
+		printf("%s        ****  *****      *   *  *     *  *  * *  *  ****   *******  *     *  *  * *%s \n", RED, RESET);
+		printf("%s        *   * *  *       * *    *     *  *   **  *     *   *        *     *  *   **%s \n", RED, RESET);
+		printf("%s        ****  *   *      **     *******  *    *  *******   *******  *******  *    *%s \n\n\n\n", RED, RESET);
+	    printf("   1-jogar\n\n\n   2-tutorial\n\n\n   3-sair\n\n\n");
+
         escolha = getch();
 
         if (escolha == '1') {
@@ -85,7 +95,7 @@ int main() {
         }
 
         if (tem_chave == 0) {
-            level1[4][4] = Chave;
+            level1[4][5] = Chave;
         }
 
         for (i = 0; i < 10; i++) {
@@ -114,8 +124,10 @@ int main() {
         if (move == 'd' && cord_X + 1 != 0 && cord_X + 1 != 9) {
             cord_X++;
         }
-        if (move == 'i' && cord_X == 4 && cord_Y == 4) {
+        if (move == 'i' && cord_X == 5 && cord_Y == 5) {
             tem_chave  = 1;
+            level1[4][5] = ' ';
+
         }
         if (cord_X == 5 && cord_Y == 7) {
             system("cls");
