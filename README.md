@@ -23,7 +23,7 @@ int keyX, keyY;
 int tela = 0;
 int coord_X, coord_Y;
 int vidas;
-int button_pressed;
+int button_pressed = 0;
 
 // Funções do Jogo
 void playerMovement(char key_pressed, int limit)
@@ -31,7 +31,7 @@ void playerMovement(char key_pressed, int limit)
     if (key_pressed == 'q')
     {
         tela = 0;
-        main();
+        return;
     }
     if (key_pressed == 'w' && playerX - 1 != 0 && playerX - 1 != limit)
     {
@@ -69,9 +69,9 @@ void levelWalls(int xLimit, int yLimit, char level[xLimit][yLimit])
 }
 void print_level(int xLimit, int yLimit, char level[xLimit][yLimit])
 {
-    for (coord_X = 0; coord_X < xLimit; coord_X++)
+    for (int coord_X = 0; coord_X < xLimit; coord_X++)
     {
-        for (coord_Y = 0; coord_Y < yLimit; coord_Y++)
+        for (int coord_Y = 0; coord_Y < yLimit; coord_Y++)
         {
             printf(" %c", level[coord_X][coord_Y]);
         }
@@ -80,7 +80,7 @@ void print_level(int xLimit, int yLimit, char level[xLimit][yLimit])
 }
 void gameOver(char level[20][20]) 
 {
-    if (level[playerX][playerY] == SPIKE_CHAR || playerX == monsterX && playerY == monsterY) {
+    if (level[playerX][playerY] == SPIKE_CHAR || (playerX == monsterX && playerY == monsterY)) {
         system("cls");
         playerY = 1;
         playerX = 1;
@@ -89,13 +89,13 @@ void gameOver(char level[20][20])
 
         if (vidas == 0) {
             printf(
-                "voce foi pego 3 vezez tentando fugir e agora esta na solitaria \n"
+                "voce foi pego 3 vezes tentando fugir e agora esta na solitaria \n"
                 "talvez em outro momento voce consiga fugir \n"
                 "\n"
             );
             system("pause");
             tela = 0;
-            main();
+            return;
         }
         printf("voce foi pego |tentativas restantes: %d\n\n", vidas);
 
@@ -107,17 +107,12 @@ int main()
     vidas = 3;
     srand(time(NULL));
 
-    // Declaração de variavéis
-
-    int choice;
-
+    // Declaração de variáveis
     int monstermov;
 
     // Inicializando matrizes
     char level1[10][10];
-
     char level2[20][20];
-    // char level3[40][40];
     levelWalls(10, 10, level1);
     levelWalls(20, 20, level2);
 
@@ -126,14 +121,14 @@ int main()
     {
         system("cls");
         printf("%s        ****  *****      **     *     *  *    *  *******   *******  *******  *    *%s \n", RED, RESET);
-	    printf("%s        *   * *   *      * *    *     *  * *  *  *         *        *     *  * *  *%s \n", RED, RESET);
-		printf("%s        ****  *****      *   *  *     *  *  * *  *  ****   *******  *     *  *  * *%s \n", RED, RESET);
-		printf("%s        *   * *  *       * *    *     *  *   **  *     *   *        *     *  *   **%s \n", RED, RESET);
-		printf("%s        ****  *   *      **     *******  *    *  *******   *******  *******  *    *%s \n\n\n\n", RED, RESET);
-	    printf("   1-jogar\n\n\n   2-tutorial\n\n\n   3-sair\n\n\n");
-        choice = getch();
+        printf("%s        *   * *   *      * *    *     *  * *  *  *         *        *     *  * *  *%s \n", RED, RESET);
+        printf("%s        ****  *****      *   *  *     *  *  * *  *  ****   *******  *     *  *  * *%s \n", RED, RESET);
+        printf("%s        *   * *  *       * *    *     *  *   **  *     *   *        *     *  *   **%s \n", RED, RESET);
+        printf("%s        ****  *   *      **     *******  *    *  *******   *******  *******  *    *%s \n\n\n\n", RED, RESET);
+        printf("   1-jogar\n\n\n   2-tutorial\n\n\n   3-sair\n\n\n");
+        key_pressed = getch();
 
-        if (choice == '1')
+        if (key_pressed == '1')
         {
             system("cls");
 
@@ -144,7 +139,7 @@ int main()
             tela = 1;
             system("cls");
         }
-        else if (choice == '2')
+        else if (key_pressed == '2')
         {
             system("cls");
             printf(
@@ -157,12 +152,12 @@ int main()
                 "S: se mova uma unidade para baixo\n\n"
                 "D: se mova uma unidade para direita\n\n"
                 "I: interage com um objeto\n\n"
-				"@: chave da porta\n\n"
-				"X: guarda noturno\n\n"
-				"&: Ze do crime\n\n");
+                "@: chave da porta\n\n"
+                "X: guarda noturno\n\n"
+                "&: Ze do crime\n\n");
             system("pause");
         }
-        else if (choice == '3')
+        else if (key_pressed == '3')
         {
             system("cls");
             printf("voce nao tem a coragem necessaria para fugir ne?.");
@@ -178,7 +173,8 @@ int main()
     // Level 1 loop
     while (tela == 1)
     {
-        monsterX = 6;
+        // Declarando posições iniciais dos objetos
+        monsterX = 4;
         monsterY = 6;
         keyX = 5;
         keyY = 5;
@@ -251,8 +247,8 @@ int main()
     // Loop da Fase 2
     while (tela == 2)
     {   
+        
         // Declarando posições iniciais dos objetos
-
         monsterX = 10;
         monsterY = 17;
         keyX = 2;
@@ -285,21 +281,29 @@ int main()
         }
 
 
-        monstermov = rand() % 2;    
-        if (monstermov == 0) 
-        {
-            if (playerY < monsterY && monsterY - 1 != 0) {
-                monsterY--;
-            } else if (playerY > monsterY && monsterY + 1 != 19) {
-                monsterY++;
-            }
-        } 
-        else 
-        {
-            if (playerX < monsterX && monsterX - 1 != 0) {
-                monsterX--;
-            } else if (playerX > monsterX && monsterX + 1 != 19) {
+        //mov do inimigo 2
+        if(playerY != monsterY && playerX != monsterX && key_pressed != 105){
+            monstermov = rand()%2;
+        }else if(playerY == monsterY && key_pressed != 105){
+            monstermov = 0;
+        }else if(playerX == monsterX && key_pressed != 105){
+            monstermov = 1;
+        }else if(key_pressed == 105){
+            monstermov = 3;
+        }
+        
+        //inimigo 2 seguindo o player
+        if(monstermov == 0){
+            if(playerX > monsterX && level2[monsterY][monsterX+1] != 'D' && level2[monsterY][monsterX+1] != '*' && level2[monsterY][monsterX+1] != '#' && level2[monsterY][monsterX+1] != '@'){
                 monsterX++;
+            }else if(playerX < monsterX && level2[monsterY][monsterX-1] != 'D' && level2[monsterY][monsterX-1] != '*' && level2[monsterY][monsterX-1] != '#' && level2[monsterY][monsterX-1] != '@'){
+                monsterX--;
+            }
+        }else if(monstermov == 1){
+            if(playerY > monsterY && level2[monsterY+1][monsterX] != 'D' && level2[monsterY+1][monsterX] != '#' && level2[monsterY+1][monsterX] != '@' && level2[monsterY+1][monsterX] != '*'){
+                monsterY++;
+            }else if(playerY < monsterY && level2[monsterY-1][monsterX] != 'D' && level2[monsterY-1][monsterX] != '@' && level2[monsterY-1][monsterX] != '#' && level2[monsterY-1][monsterX] != '*'){ 
+                monsterY--;
             }
         }
 
@@ -332,9 +336,9 @@ int main()
         }
         playerMovement(key_pressed, 19);
         gameOver(level2);
-        system("cls");
-
+        system("cls"); 
     }
 
     return 0;
 }
+
